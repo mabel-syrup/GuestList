@@ -18,16 +18,26 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> mGuests;
 
+    private final static String GUEST_LIST_KEY = "guest list bundle key";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mGuests = new ArrayList<String>();
+        if (savedInstanceState != null) {
+            mGuests = savedInstanceState.getStringArrayList(GUEST_LIST_KEY);
+        }
+
+        if (mGuests == null) {
+            mGuests = new ArrayList<String>();
+        }
 
         mEnterGuestET = (EditText) findViewById(R.id.guest_name_edit_text);
         mSaveGuestButton = (Button) findViewById(R.id.save_button);
         mGuestListTV = (TextView) findViewById(R.id.guest_list_text_view);
+
+        updateGuestList();
 
         mSaveGuestButton.setOnClickListener(new View.OnClickListener() {
 
@@ -47,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outBundle){
+        outBundle.putStringArrayList(GUEST_LIST_KEY, mGuests);
     }
 
     private void updateGuestList() {
